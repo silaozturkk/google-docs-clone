@@ -6,7 +6,7 @@ import { type ColorResult, SketchPicker } from "react-color";
 import { useEditorStore } from "@/store/use-editor-store";
 import { Separator } from "@/components/ui/separator";
 import { type Level } from "@tiptap/extension-heading";
-import { BoldIcon, ChevronDownIcon, HighlighterIcon, ImageIcon, ItalicIcon, Link2Icon, ListTodoIcon, LucideIcon,  MessageSquarePlusIcon, PrinterIcon, Redo2Icon, RemoveFormattingIcon, SearchIcon, SpellCheckIcon, UnderlineIcon, Undo2Icon, UploadIcon } from "lucide-react";
+import { AlignCenterIcon, AlignJustifyIcon, AlignLeftIcon, AlignRightIcon, BoldIcon, ChevronDownIcon, HighlighterIcon, ImageIcon, ItalicIcon, Link2Icon, ListIcon, ListOrderedIcon, ListTodoIcon, LucideIcon,  MessageSquarePlusIcon, PrinterIcon, Redo2Icon, RemoveFormattingIcon, SearchIcon, SpellCheckIcon, UnderlineIcon, Undo2Icon, UploadIcon } from "lucide-react";
 import {
     DropdownMenu,
     DropdownMenuItem,
@@ -23,22 +23,127 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import TextAlign from "@tiptap/extension-text-align";
 
+//list
+const ListButton = () => {
+    const { editor } = useEditorStore();
+
+    const lists = [
+        {
+            label:"Bullet List",
+            icon: ListIcon,
+            isActive:() => editor?.isActive("bulletList"),
+            onClick:() => editor?.chain().focus().toggleBulletList().run(),
+        },
+        {
+            label:"Ordered List",
+            icon: ListOrderedIcon,
+            isActive:() => editor?.isActive("orderedlist"),
+            onClick:() => editor?.chain().focus().toggleOrderedList().run(),
+        },
+
+    ]
+    return (
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <button 
+                    className="h-7 min-w-7 shrink-0 flex flex-col items-center justify-center rounded-sm hover:bg-neutral-200/80 px-1.5 overflow-hidden text-sm" 
+                >
+                    <ListIcon className="size-4"/>
+                </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="p-1 flex flex-col gap-y-1">
+                {lists.map(({label, icon:Icon, onClick, isActive}) => (
+                    <button 
+                        key={label}
+                        onClick={onClick}
+                        className={cn(
+                            "flex items-center gap-x-2 px-2 py-1 rounded-sm hover:bg-neutral-200/80",
+                            isActive() && "bg-neutral-200/80"
+                        )}
+
+                    >
+                        <Icon className="size-4"/>
+                        <span className="text-sm">{label}</span>
+                    </button>
+                ))}
+            </DropdownMenuContent>
+        </DropdownMenu>
+    );
+}
+
+//hizalamak için
+const AlignButton = () => {
+    const { editor } = useEditorStore();
+
+    const alignments = [
+        {
+            label:"Align Left",
+            value: "left",
+            icon: AlignLeftIcon,
+        },
+        {
+            label:"Align Center",
+            value: "center",
+            icon: AlignCenterIcon,
+        },
+        {
+            label:"Align right",
+            value: "right",
+            icon: AlignRightIcon,
+        },
+        {
+            label:"Align Justify",
+            value: "justify",
+            icon: AlignJustifyIcon,
+        },
+    ]
+    return (
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <button 
+                    className="h-7 min-w-7 shrink-0 flex flex-col items-center justify-center rounded-sm hover:bg-neutral-200/80 px-1.5 overflow-hidden text-sm" 
+                >
+                    <AlignLeftIcon className="size-4"/>
+                </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="p-1 flex flex-col gap-y-1">
+                {alignments.map(({label,value, icon:Icon}) => (
+                    <button 
+                        key={value} 
+                        onClick={() => editor?.chain().focus().setTextAlign(value).run()}
+                        className={cn("flex items-center gap-x-2 px-2 py-1 rounded-sm hover:bg-neutral-200/80",
+                            editor?.isActive({ TextAlign: value}) && "bg-neutral-200/80"
+                        )}
+                    >
+                        <Icon className="size-4"/>
+                        <span className="text-sm">{label}</span>
+                    </button>
+                ))}
+            </DropdownMenuContent>
+        </DropdownMenu>
+    );
+}
+
+//görsel eklemek için
 const ImageButton = () => {
-    const {editor} = useEditorStore();
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [imageUrl, setImageUrl] = useState("");
+    const {editor} = useEditorStore(); // editöre erişim için
+    const [isDialogOpen, setIsDialogOpen] = useState(false); // URL diyalog penceresinin açık olup olmadıgı kontrolu
+    const [imageUrl, setImageUrl] = useState(""); // kullanıcıdan alınan URL
 
-    //metne bir link ekler
+    //editöre resim ekler
     const onChange = (src: string) => {
         editor?.chain().focus().setImage({ src }).run();
     };
 
+    // dosyalardan resim yüklemek için
     const onUpload = () => {
         const input = document.createElement("input");
         input.type = "file";
-        input.accept = "image/*";
+        input.accept = "image/*"; // sadece resim dosyaları için
 
+        //kullanıcı bir dosya sectiğinde dosyaya gecici bir URL olusturulur. bu url editore eklenir
         input.onchange = (e) => {
             const file = (e.target as HTMLInputElement).files?.[0]; 
             if(file) {
@@ -49,6 +154,7 @@ const ImageButton = () => {
         input.click();
     };
 
+    // URL gelmis mi kontrolu eger gelmisse eklenir ve pencere kapanır
     const handleImageUrlSubmit = () => {
         if(imageUrl) {
             onChange(imageUrl);
@@ -104,7 +210,6 @@ const ImageButton = () => {
     );
     
 };
-
 
 //link eklemek için
 const LinkButton = () => {
@@ -436,9 +541,9 @@ const Toolbar = () => {
             <Separator orientation="vertical" className="h-6 bg-neutral-300" />
             <LinkButton />
             <ImageButton />
-            {/* TODO: Align*/}
+            <AlignButton />
             {/* TODO: Line height */}
-            {/* TODO: List */}
+            <ListButton />
             {sections[2].map((item) => (
                 <ToolbarButton key={item.label} {...item} />
             ))}

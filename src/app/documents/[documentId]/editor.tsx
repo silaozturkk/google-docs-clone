@@ -9,6 +9,7 @@ import { Underline } from '@tiptap/extension-underline';
 import FontFamily from '@tiptap/extension-font-family';
 import TextStyle from '@tiptap/extension-text-style';
 import Image from '@tiptap/extension-image'
+import TextAlign from '@tiptap/extension-text-align'
 import Link from '@tiptap/extension-link'
 import ImageResize from "tiptap-extension-resize-image"
 import { useEditor, EditorContent } from '@tiptap/react'
@@ -59,6 +60,9 @@ export const Editor = () => {
         extensions: [
             StarterKit, //metin yazabilir
             Underline,
+            TextAlign.configure({
+                types:["heading","paragraph"]
+            }),
             Color,
             Highlight.configure({
                 multicolor: true,

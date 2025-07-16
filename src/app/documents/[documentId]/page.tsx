@@ -1,9 +1,10 @@
 import { Editor } from "./editor";
+import Toolbar from "./toolbar";
 
 interface DocumentIdPageProps {
     params: Promise<{ documentId: string }>;
 }
-// promise gelecekte tanımlanacak suandd olamayan veriyi temsil eder
+// promise gelecekte tanımlanacak suanda olamayan veriyi temsil eder
 // burda asağıda vereceğimiz özelliğin tipini veriyoruz
 
 
@@ -13,6 +14,7 @@ const DocumentIdPage = async ({ params }: DocumentIdPageProps) => {
     return ( 
     <div className="min-h-screen bg-[#FAFBFD]">
         <p>Document Id: {documentId}</p>
+        <Toolbar />
         <Editor />
     </div> 
     );

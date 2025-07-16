@@ -1,10 +1,11 @@
 "use client"
 import { cn } from "@/lib/utils";
 // cn: tailwind class'larını koşullu şekilde birleştiren yardımcı bir fonksiyondur.
+import { type ColorResult, SketchPicker } from "react-color";
 import { useEditorStore } from "@/store/use-editor-store";
 import { Separator } from "@/components/ui/separator";
-
-import { BoldIcon, ChevronDownIcon, ItalicIcon, ListTodoIcon, LucideIcon,  MessageSquarePlusIcon, PrinterIcon, Redo2Icon, RemoveFormattingIcon, SpellCheckIcon, UnderlineIcon, Undo2Icon } from "lucide-react";
+import { type Level } from "@tiptap/extension-heading";
+import { BoldIcon, ChevronDownIcon, HighlighterIcon, ItalicIcon, ListTodoIcon, LucideIcon,  MessageSquarePlusIcon, PrinterIcon, Redo2Icon, RemoveFormattingIcon, SpellCheckIcon, UnderlineIcon, Undo2Icon } from "lucide-react";
 import {
     DropdownMenu,
     DropdownMenuItem,
@@ -12,7 +13,65 @@ import {
     DropdownMenuTrigger,
 
 } from "@/components/ui/dropdown-menu";
-import { type Level } from "@tiptap/extension-heading";
+
+// Highlight olması için
+const HighlightColorButton = () => {
+    const { editor } = useEditorStore();
+
+    const value = editor?.getAttributes("highlight").color || "#FFFFFF"
+
+    const onChange = (color: ColorResult) => {
+        editor?.chain().focus().setHighlight({ color: color.hex }).run();
+    };
+
+    return (
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <button 
+                    className="h-7 min-w-7 shrink-0 flex flex-col items-center justify-center rounded-sm hover:bg-neutral-200/80 px-1.5 overflow-hidden text-sm" 
+                >
+                    <HighlighterIcon className="size-4"/>
+                </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="border p-0.5">
+                <SketchPicker
+                    color={value}
+                    onChange={onChange}
+                />
+            </DropdownMenuContent>
+        </DropdownMenu>
+    );
+}
+
+//text rengi için
+const TextColorButton = () => {
+    const { editor } = useEditorStore();
+
+    const value = editor?.getAttributes("textStyle").color || "#000000";
+
+    const onChange = (color: ColorResult) => {
+        editor?.chain().focus().setColor(color.hex).run();
+    };
+
+    return (
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <button 
+                    className="h-7 min-w-7 shrink-0 flex flex-col items-center justify-center rounded-sm hover:bg-neutral-200/80 px-1.5 overflow-hidden text-sm" 
+                >
+                    <span className="text-xs">A</span>
+                    <div className="h-0.5 w-full" style={{backgroundColor: value}}/>
+                </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="border p-0.5">
+                <SketchPicker
+                    color= {value}
+                    onChange={onChange}
+                />
+            </DropdownMenuContent>
+        </DropdownMenu>
+    );
+}
 
 //yazı tipi boyutu için
 const HeadingLevelButton = () => {
@@ -27,6 +86,7 @@ const HeadingLevelButton = () => {
         { label: "Heading 5 ", value: 5, fontSize: "16px"},
     ];
 
+    //bu fonksiyon yukardaki dizi içinde döner ve ekranda o ise onu gösterir
     const getCurrentHeading = () => {
         for (let level=1;level<=5;level++) {
             if (editor?.isActive("heading", {level})) {
@@ -241,8 +301,8 @@ const Toolbar = () => {
             {sections[1].map((item) => (
                 <ToolbarButton key={item.label} {...item} />
             ))}
-            {/* TODO: Text Color */}
-            {/* TODO: Highlight Color */}
+            <TextColorButton />
+            <HighlightColorButton />
             <Separator orientation="vertical" className="h-6 bg-neutral-300" />
             {/* TODO: Link */}
             {/* TODO: Image */}

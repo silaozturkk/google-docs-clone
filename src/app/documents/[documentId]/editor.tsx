@@ -7,6 +7,8 @@ import TableCell from '@tiptap/extension-table-Cell'
 import TableHeader from '@tiptap/extension-table-header'
 import TableRow from '@tiptap/extension-table-row'
 
+import { Underline } from '@tiptap/extension-underline';
+
 import Image from '@tiptap/extension-image'
 
 import ImageResize from "tiptap-extension-resize-image"
@@ -57,6 +59,8 @@ export const Editor = () => {
         //editorun neleri destekleyeceğini belirler
         extensions: [
             StarterKit, //metin yazabilir
+            Underline,
+            TaskList,
             Image, //resim ekleyebilir, boyutlandırabilir
             ImageResize,
             Table, //tablo ekleyebilir

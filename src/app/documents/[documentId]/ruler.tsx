@@ -6,13 +6,16 @@ import { FaCaretDown } from "react-icons/fa";
 const markers = Array.from({ length:83 }, (_,i) => i)
 
 const Ruler = () => {
+    //işaretci konumları
     const [leftMargin, setLeftMargin] = useState(56);
     const [rightMargin, setRightMargin] = useState(56);
 
+    //kullanıcı sürüklüyor mu kontrolu
     const [isDraggingLeft, setIsDraggingLeft] = useState(false);
     const [isDraggingRight, setIsDraggingRight] = useState(false);
+    
+    // bileşenlerin pozisyonu
     const rulerRef = useRef<HTMLDivElement>(null);
-
 
     //tıklandıgında sağa sola surukleme açık
     const handleLeftMouseDown = () => {
@@ -28,12 +31,15 @@ const Ruler = () => {
         const MINIMUM_SPACE = 100;
 
         if((isDraggingLeft || isDraggingRight) && rulerRef.current) {
+            // cetvelin içindeki #ruler-container ı bul
             const container = rulerRef.current.querySelector("#ruler-container");
             if(container) {
                 const containerRect = container.getBoundingClientRect();
                 const relativeX = e.clientX - containerRect.left;
+                // pozisyonu sayfa dısına tasmasın diye sıfırlıyoruz
                 const rawPosition = Math.max(0, Math.min(PAGE_WIDTH, relativeX));
 
+                // sol ya da sag surukleniyorsa
                 if(isDraggingLeft) {
                     const maxLeftPosition = PAGE_WIDTH- rightMargin -MINIMUM_SPACE;
                     const newLeftPosition = Math.min(rawPosition, maxLeftPosition);
@@ -47,11 +53,12 @@ const Ruler = () => {
             }
         }
     }
+    // mouse bırakıldıgında
     const handleMouseUp=() => {
         setIsDraggingLeft(false);
         setIsDraggingRight(false);
     };
-
+    // çift tıklandıgında sıfırlanacak
     const handleLeftDoubleClick = () => {
         setLeftMargin(56)
     }

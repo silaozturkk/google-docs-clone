@@ -17,6 +17,7 @@ import StarterKit from '@tiptap/starter-kit'
 import { useEditorStore } from '@/store/use-editor-store';
 import Color from "@tiptap/extension-color";
 import  Highlight  from '@tiptap/extension-highlight';
+import { FontSizeExtension } from '@/extensions/font-size';
 
 
 export const Editor = () => {
@@ -60,7 +61,8 @@ export const Editor = () => {
         extensions: [
             StarterKit, //metin yazabilir
             Underline,
-            TextAlign.configure({
+            FontSizeExtension,
+            TextAlign.configure({ //hizalama
                 types:["heading","paragraph"]
             }),
             Color,

@@ -3,6 +3,8 @@ import "./globals.css";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { Inter } from "next/font/google";
 
+import { ConvexClientProvider } from "@/components/convex-client-provider";
+
 const inter =  Inter({
   subsets: ["latin"],
 });
@@ -24,7 +26,10 @@ export default function RootLayout({
       >
         {/* search için nuqs adapter indirdik */}
         <NuqsAdapter>
-          {children}
+          {/* veri tabanı için */}
+          <ConvexClientProvider>
+            {children}
+          </ConvexClientProvider>
         </NuqsAdapter>
       </body>
     </html>

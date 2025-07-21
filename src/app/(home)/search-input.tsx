@@ -7,7 +7,7 @@ import { SearchIcon, XIcon } from "lucide-react";
 import { useRef, useState } from "react";
 
 const SearchInput = () => {
-    const[search, setSearch] = useSearchParam();
+    const[, setSearch] = useSearchParam();
 
     const [value, setValue] = useState("");
     //input Dom elementine dogrudan erişmek için kullandık.

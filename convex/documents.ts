@@ -4,6 +4,7 @@ import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { paginationOptsValidator } from "convex/server";
 import { title } from "process";
+import { Search } from "lucide-react";
 // burda giris yapan kullanıcının kimliğini alıyoruz.
 // kullanıcı giris yapmamıssa hata fırlatıyoruz
 // giris yaptıysak documents koleksiyonuna yeni bir kayıt ekliyoruz
@@ -27,10 +28,29 @@ export const create = mutation({
 });
 
 //sayfalama için kullanılıyor.
+//eger search parametresi varsa search indexini kullanıyoruz.
+//eger kullanıcı giris yapmamıssa hata fırlatıyoruz.
 export const get = query({
-    args: { paginationOpts: paginationOptsValidator },
-    handler: async (ctx, args) => {
-        return await ctx.db.query("documents").paginate(args.paginationOpts);
+    args: { paginationOpts: paginationOptsValidator, search: v.optional(v.string()) },
+    handler: async (ctx, {search, paginationOpts}) => {
+        const user = await ctx.auth.getUserIdentity();
+        if(!user) {
+            throw new ConvexError("Unathorized");
+        }
+    
+        if (search) {
+            return await ctx.db 
+                .query("documents")
+                .withSearchIndex("search_title", (q) => 
+                    q.search("title", search).eq("ownerId", user.subject)
+                )
+                .paginate(paginationOpts);
+        }
+
+        return await ctx.db
+            .query("documents")
+            .withIndex("by_owner_id", (q) => q.eq("ownerId", user.subject))
+            .paginate(paginationOpts);
     },
 });
 

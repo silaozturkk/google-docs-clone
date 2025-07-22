@@ -7,6 +7,7 @@ import { useMutation } from "convex/react";
 import { useRouter } from "next/navigation";
 import { api } from "../../../convex/_generated/api";
 import { useState } from "react";
+import { toast } from "sonner";
 
 
 const TemplateGallery = () => {
@@ -21,6 +22,8 @@ const TemplateGallery = () => {
         // create ile veritabanına yeni bir belge ekliyoruz.
         // belgenin id'sini alıyoruz ve router ile belgeye yönlendiriyoruz.
         create({ title, initialContent })
+            .catch(() => toast.error("Something went wrong"))
+            .then(() => toast.success("Document created"))
             .then((documentId) => {
                 router.push(`/documents/${documentId}`)
             })

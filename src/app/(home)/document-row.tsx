@@ -28,8 +28,8 @@ export const DocumentRow = ({ document }: DocumentRowProps) => {
             </TableCell>
             <TableCell className="text-muted-foreground hidden md:flex items-center gap-2">
                 {document.organizationId 
-                    ? <Building2Icon /> 
-                    : <CircleUserIcon /> 
+                    ? <Building2Icon size={16}/> 
+                    : <CircleUserIcon size={16}/> 
                 }
                 {document.organizationId ? "Organization" : "Personal"}
             </TableCell>

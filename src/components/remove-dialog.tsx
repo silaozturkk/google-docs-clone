@@ -1,5 +1,5 @@
 "use client";
-
+import { toast } from "sonner";
 import { 
     AlertDialog, 
     AlertDialogContent,
@@ -58,6 +58,9 @@ export const RemoveDialog = ({ documentId, children }: RemoveDialogProps) => {
                             setIsRemoving(true);
                             remove({ id: documentId }) 
                             // silme işlemi yapılır.
+                                 // silme yapılamazsa catch ile hata fırlatılır
+                                .catch(() => toast.error("Something went wrong"))
+                                .then(() => toast.success("Document removed"))
                                 .finally(() => setIsRemoving(false));
                         }}
                     >

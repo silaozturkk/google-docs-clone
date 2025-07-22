@@ -4,6 +4,7 @@ import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { Inter } from "next/font/google";
 
 import { ConvexClientProvider } from "@/components/convex-client-provider";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter =  Inter({
   subsets: ["latin"],
@@ -28,6 +29,7 @@ export default function RootLayout({
         <NuqsAdapter>
           {/* veri tabanı için */}
           <ConvexClientProvider>
+            <Toaster />
             {children}
           </ConvexClientProvider>
         </NuqsAdapter>

@@ -3,6 +3,7 @@ import { Doc } from "../../../convex/_generated/dataModel";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { LoaderIcon } from "lucide-react";
 import { DocumentRow } from "./document-row";
+import { Button } from "@/components/ui/button";
 
 // dışarıdan gelen verileri alıyoruz. henüz yüklenmediyse loading gösteriyoruz.
 interface DocumentsTableProps {
@@ -46,6 +47,17 @@ export const DocumentsTable = ({ documents, status, loadMore }: DocumentsTablePr
                     )}
                 </Table>
             )}
+            {/*  her seferinde 5 tane daha yükleniyor. */}
+            <div className="flex items-center justify-center">
+                <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={() => loadMore(5)} 
+                    disabled={status !== "CanLoadMore"}
+                >
+                    {status === "CanLoadMore" ? "Load more" : "End of results"}
+                </Button>
+            </div>
         </div>
     );
 };

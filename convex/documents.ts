@@ -5,11 +5,31 @@ import { mutation, query } from "./_generated/server";
 import { paginationOptsValidator } from "convex/server";
 import { title } from "process";
 import { Search } from "lucide-react";
+
 // burda giris yapan kullanıcının kimliğini alıyoruz.
 // kullanıcı giris yapmamıssa hata fırlatıyoruz
 // giris yaptıysak documents koleksiyonuna yeni bir kayıt ekliyoruz
 // title, ownerId, initialContent kısımlarını tutuyor.
 
+
+// Belge ID’leri üzerinden bildirimleri kullanıcıya başlık (isim)
+//  ile birlikte göstermek.
+export const getByIds = query({
+    args: { ids: v.array(v.id("documents")) },
+    handler: async (ctx, { ids }) => {
+        const documents = [];
+
+        for (const id of ids) {
+            const document = await ctx.db.get(id);
+            if (document) {
+                documents.push({ id: document._id, name: document.title });
+            } else {
+                documents.push({ id, name: "Removed" });
+            }
+        }
+        return documents;
+    },
+});
 
 //belgeyi eklemek için kullanılıyor.
 export const create = mutation({
@@ -24,6 +44,8 @@ export const create = mutation({
         const organizationId = (user.organization_id ?? undefined) as 
             | string 
             | undefined;
+        
+        console.log("döküman olusturan kullanıcı", user);
 
         return await ctx.db.insert("documents", {
             title: args.title ?? "Untitled coument",

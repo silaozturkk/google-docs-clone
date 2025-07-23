@@ -1,14 +1,22 @@
 import { useRef, useState } from "react";
 import { FaCaretDown } from "react-icons/fa";
-
+import { useStorage, useMutation } from "@liveblocks/react";
 
 //0-82 arası dizi olustu ve her elemeana index atandı
 const markers = Array.from({ length:83 }, (_,i) => i)
 
 const Ruler = () => {
-    //işaretci konumları
-    const [leftMargin, setLeftMargin] = useState(56);
-    const [rightMargin, setRightMargin] = useState(56);
+
+    const leftMargin = useStorage((root) => root.leftMargin) ?? 56;
+    const setLeftMargin = useMutation(({storage}, position: number) => {
+        storage.set("leftMargin", position);
+    }, []);  
+
+    const rightMargin = useStorage((root) => root.rightMargin) ?? 56;
+    const setRightMargin = useMutation(({storage}, position: number) => {
+        storage.set("rightMargin", position);
+    }, []);  
+    
 
     //kullanıcı sürüklüyor mu kontrolu
     const [isDraggingLeft, setIsDraggingLeft] = useState(false);

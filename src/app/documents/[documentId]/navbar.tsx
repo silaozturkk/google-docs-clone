@@ -3,6 +3,7 @@ import Image from "next/image"
 import DocumentInput from "./document-input";
 import MenubarComponent from "./menubar-component";
 import { OrganizationSwitcher, UserButton } from "@clerk/nextjs";
+import { Avatars } from "./avatars";
 
 export const Navbar = () => {
     return (
@@ -18,6 +19,7 @@ export const Navbar = () => {
             </div>
             <div className="flex gap-3 items-center pl-6">
                 {/* organizasyon islemlerinden sonra yapılacak islem için */}
+                <Avatars />
                 <OrganizationSwitcher
                     afterCreateOrganizationUrl="/"
                     afterLeaveOrganizationUrl="/"

@@ -11,7 +11,6 @@ import {DropdownMenu, DropdownMenuItem, DropdownMenuContent, DropdownMenuTrigger
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import TextAlign from "@tiptap/extension-text-align";
 
 
 //satır aralığı

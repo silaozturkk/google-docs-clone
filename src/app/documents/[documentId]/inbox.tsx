@@ -4,11 +4,10 @@ import { ClientSideSuspense } from "@liveblocks/react";
 import { InboxNotification, InboxNotificationList } from "@liveblocks/react-ui";
 import { useInboxNotifications } from "@liveblocks/react/suspense";
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
 
 export const Inbox = () => {
-    const { inboxNotifications } = useInboxNotifications();
 
     return (
         <ClientSideSuspense fallback={

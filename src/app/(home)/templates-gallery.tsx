@@ -22,11 +22,11 @@ const TemplateGallery = () => {
         // create ile veritabanına yeni bir belge ekliyoruz.
         // belgenin id'sini alıyoruz ve router ile belgeye yönlendiriyoruz.
         create({ title, initialContent })
-            .catch(() => toast.error("Something went wrong"))
-            .then(() => toast.success("Document created"))
             .then((documentId) => {
-                router.push(`/documents/${documentId}`)
+                toast.success("Document created");
+                router.push(`/documents/${documentId}`);
             })
+            .catch(() => toast.error("Something went wrong"))
             .finally(() => {
                 setIsCreating(false);
             });

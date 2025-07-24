@@ -48,7 +48,7 @@ export async function POST( req: Request) {
     
     const isOwner = document.ownerId === user.id;
 
-    const orgId = sessionClaims.org_id ?? (sessionClaims as any).o?.id;
+    const orgId = sessionClaims.org_id ?? (sessionClaims as unknown as { o?: { id: string } }).o?.id;
 
 
     const isOrganizationMember = 
@@ -58,15 +58,23 @@ export async function POST( req: Request) {
     if(!isOwner && !isOrganizationMember) {
         return new Response("Unauthorized", { status: 401 });
     }
+
+    const name = user.fullName ?? user.primaryEmailAddress?.emailAddress ?? "Anonymous";
+
+    const nameToNumber = name.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    // Rastgele renk üret
+    const hue = Math.floor(nameToNumber) % 360;
+    const color = `hsl(${hue}, 80%, 60%)`;
+
     //liveblocks session oluşturulur.
     const session = liveblocks.prepareSession(user.id, {
         userInfo: {
-          name: `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim() || "Anonymous",
+          name,
           avatar: user.imageUrl,
+          color,
         },
       });
-      console.log("userInfo.name", `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim());
-
+      
     //erişim yetkisi verilir.
     session.allow(room, session.FULL_ACCESS);
     const { body, status } = await session.authorize();

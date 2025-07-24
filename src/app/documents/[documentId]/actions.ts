@@ -16,7 +16,7 @@ export async function getUsers() {
     const clerk = await clerkClient();
 
     // Organization ID'yi hem org_id hem de o.id'den al
-    const organizationId = sessionClaims?.org_id || (sessionClaims?.o as any)?.id;
+    const organizationId = sessionClaims?.org_id || (sessionClaims?.o as unknown as string);
     console.log("getUsers organizationId", organizationId);
 
     if (!organizationId) {
@@ -24,18 +24,14 @@ export async function getUsers() {
     }
 
     const response = await clerk.users.getUserList({
-        organizationId: [organizationId],
+        organizationId: [sessionClaims?.org_id as string],
     });
 
     const users = response.data.map((user) => ({
         id: user.id,
-        name:
-            user.fullName
-            || user.username
-            || [user.firstName, user.lastName].filter(Boolean).join(" ")
-            || user.primaryEmailAddress?.emailAddress
-            || "Anonymous",
+        name: user.fullName ?? user.primaryEmailAddress?.emailAddress ?? "Anonymous",
         avatar: user.imageUrl,
+        color: "",
     }));
     return users;
 }

@@ -1,16 +1,16 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { AlertTriangleIcon} from "lucide-react";
+import { AlertTriangleIcon } from "lucide-react";
 import Link from "next/link";
 
-const ErrorPage = ({
+export default function Error({
     error,
-    reset } : {
-        error: Error & { digest?: string };
-        reset: () => void;
-    }
-) => {
+    reset,
+}: {
+    error: Error & { digest?: string };
+    reset: () => void;
+}) {
     return (
         <div className="min-h-screen flex flex-col items-center justify-center space-y-6">
             <div className="text-center space-y-4">
@@ -25,13 +25,13 @@ const ErrorPage = ({
                 </div>
             </div>
             <div className="flex items-center gap-x-3">
-                <Button 
+                <Button
                     onClick={reset}
                     className="font-medium px-6"
                 >
                     Try again
                 </Button>
-                <Button 
+                <Button
                     asChild
                     variant="ghost"
                     className="font-medium"
